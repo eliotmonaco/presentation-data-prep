@@ -1,0 +1,426 @@
+---
+title: "Data preparation in R"
+author:
+  - name: "Eliot Monaco"
+    affiliation:
+      - name: "Population health scientist<br>Kansas City Health Department"
+date: "12/3/2025"
+format:
+  revealjs:
+    theme: [dark, custom.scss]
+    highlight-style: github
+    width: 1300
+    slide-number: true
+    incremental: true
+    code-overflow: "wrap"
+    preview-links: true
+    scrollable: true
+    chalkboard:
+      buttons: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  R.options = list(width = 120)
+)
+```
+
+# Overview
+
+## Parts of an analysis
+
+- **Data prep**: Get data ready for analysis
+- **Analyze data**: Ask questions of the data and get answers
+- **Create output(s)**: Format the results for external consumption
+
+## What is data prep?
+
+- **Validate**: Is my data what I expect it to be?
+- **Clean**: What corrections need to be made for the data to be useful?
+- **Configure**: What modifications need to be made for the purposes of my analysis?
+
+## Rows and columns
+
+- Each row is a unique **observation**
+- Each column is a distinct **variable**
+
+## Columns (variables)
+
+- All values in a column are of the same **type**
+- Common types:
+    + numeric (or double or integer)
+    + character (or string or text)
+    + date (or POSIX)
+
+## Columns (variables)
+
+| animal | age | favorite_food | birth_date |
+|--------|-----|---------------|------------|
+| dog    | 4   | kibble        | 2021-04-10 |
+| cat    | 10  | fancy feast   | 2015-11-18 |
+| fish   | 0.5 | flakes        | 2025-05-22 |
+
+# Data validation
+
+## How do I know what to expect?
+
+A **data dictionary** tells you which values are allowed.
+
+| name       | description          | type | allowed_values |
+|------------|----------------------|------|----------------|
+| state_fips | State FIPS code      | text | 2-digit number |
+| manner     | Manner of death code | text | A = Accident, S = Suicide, H = Homicide, P = Pending Investigation, N = Natural, C = Could not be determined |
+
+## How do I know what to expect?
+
+If there is no data dictionary, use context.
+
+- Other documentation from the data source
+- Column names
+- Column values
+
+## Functions for snapshotting dataframes
+
+::: {.nonincremental}
+- `head()`
+- `str()`
+- `glimpse()`
+:::
+
+## `head()`
+
+```{r}
+library(dplyr)
+
+head(starwars)
+```
+
+## `str()`
+
+```{r}
+library(dplyr)
+
+str(starwars)
+```
+
+## `glimpse()`
+
+```{r}
+library(dplyr)
+
+glimpse(starwars)
+```
+
+## Global checks
+
+- What are the column names?
+- Is the number of rows unexpected?
+- Are there duplicate rows?
+- Are there missing values?
+
+## Checking individual variables
+
+Which variables are necessary to validate for the analysis? You may not need to validate them all.
+
+## Useful things
+
+- `dplyr::count()`
+- `dplyr::filter()`
+- Regular expressions
+
+## `count()`
+
+Compare column values against what's expected.
+
+```{r}
+starwars |>
+  count(hair_color)
+```
+
+## `filter()`
+
+Seek out unexpected values.
+
+```{r}
+df <- sf::st_drop_geometry(kcData::sf_tract_2024)
+
+# Check column for a single value
+df |>
+  filter(STATEFP != "29") |>
+  nrow()
+
+# Check column for multiple values
+df |>
+  filter(!COUNTYFP %in% c("037", "047", "095", "165")) |>
+  nrow()
+```
+
+## `filter()` + regex
+
+Seek out unexpected values.
+
+```{r}
+# Check column based on a regular expression pattern
+df |>
+  filter(!grepl("^\\d{6}$", TRACTCE)) |>
+  nrow()
+```
+
+## What have we done so far?
+
+So far, we haven't changed the data in any way. We are just playing detective and **learning** about the data.
+
+# Data cleaning
+
+## Important principles
+
+- Do everything in code
+- Do not manually change the source data (e.g., editing in Excel)
+- Do not overwrite the source data - keep it in its wild, shaggy state
+- Save your modified data as a separate file
+- Document and comment extensively
+
+## Example: Addresses
+
+Cleaning addresses for geocoding. We need street addresses only.
+
+| street                    | city         | state       | zip   |
+|---------------------------|--------------|-------------|-------|
+| 123 Main St.              | Kansas City  | MO          | 64102 |
+| Bob's house, 123 Main St. | Kansas City  | MO          | 64102 |
+|                           | 123 Main St. | Kansas City | MO    |
+
+```{r}
+addresses <- tribble(
+  ~street, ~city, ~state, ~zip,
+  "123 Main St.", "Kansas City", "MO", "64102",
+  "Bob's house, 123 Main St.", "Kansas City", "MO", "64102",
+  "", "123 Main St.", "Kansas City", "MO"
+)
+```
+
+## `street` variable
+
+```{r}
+# `street` doesn't start with a digit
+addresses |>
+  filter(!grepl("^\\d", street))
+
+# `street` starts with a non-digit
+addresses |>
+  filter(grepl("^\\D", street))
+```
+
+## `city` variable
+
+```{r}
+# `city` doesn't contain "kansas city" (case insensitive)
+addresses |>
+  filter(!grepl("(?i)kansas city", city))
+
+# `city` contains a digit
+addresses |>
+  filter(grepl("\\d", city))
+
+# `city` is not in a list of allowed cities
+cities <- c("Kansas City", "St. Louis", "Chicago")
+
+addresses |>
+  filter(!city %in% cities)
+```
+
+## `state` variable
+
+Can use similar methods as with `city`.
+
+::: {.nonincremental}
+- `state != "MO"`
+- `!state %in% states`
+:::
+
+```{r}
+# `state` is not two uppercase letters
+addresses |>
+  filter(!grepl("^[[:upper:]]{2}$", state))
+```
+
+## Regex detour
+
+```{r}
+states <- c("MO", "KS", "WI", "CA", "CAT", "DOG", "lEttERs")
+
+# Without start/end tokens
+result <- grepl("[[:upper:]]{2}", states)
+
+setNames(result, states)
+
+# With start/end tokens
+result <- grepl("^[[:upper:]]{2}$", states)
+
+setNames(result, states)
+```
+
+## `zip` variable
+
+```{r}
+# `zip` is not 5 digits
+addresses |>
+  filter(!grepl("^\\d{5}$", zip))
+
+# `zip` is not 5 digits starting with "64"
+addresses |>
+  filter(!grepl("^64\\d{3}$", zip))
+```
+
+## Data import detour
+
+When importing data, be careful that you don't change it unexpectedly!
+
+- If a variable can have leading zeros, import as character
+- Dates, times, and date-time values can be read in many different ways
+- Probably other examples
+
+## Data import functions
+
+Know how data import functions read in data and determine types.
+
+For example, [`readr::read_csv()`](https://readr.tidyverse.org/reference/read_delim.html).
+
+## Example: ICD codes
+
+ICD-10 codes have a specific format.
+
+Example: "W56" (Contact with marine animal)
+
+- Necessary part: uppercase letter + two digits
+- Optional part: period + additional digits
+
+. . .
+
+How to check?
+
+- Use a list of allowed values
+- Use regex, e.g., `"^[[:upper:]]\\d{2}(\\.\\d{1,5})?$"`
+
+. . .
+
+```{r}
+p <- "^[[:upper:]]\\d{2}(\\.\\d{1,5})?$"
+
+icd <- c("C41", "C41.9", "C41.999", "C41.", "C4.5", "C41.5x")
+
+result <- grepl(p, icd)
+
+setNames(result, icd)
+```
+
+## Example: ICD codes
+
+```{r}
+vital <- readRDS("icd_example.rds")
+
+vital |>
+  mutate(across(matches("cod|mult"), ~ if_else(is.na(.x), "", .x))) |>
+  head() |>
+  gt::gt()
+```
+
+## Notable features
+
+- No periods (this is okay)
+- Some values are normal, but...
+- Some have a space + an extra letter
+- Some have just numbers
+
+. . .
+
+What is going on?
+
+. . .
+
+ICD codes are split across columns.
+
+## Fix with a custom function
+
+```{r}
+# Fix problems in VR ICD code variables
+fix_vital_icd <- function(df, row_id) {
+  # Check uniqueness of row ID variable
+  if (any(duplicated(df[[row_id]]))) {
+    stop("`row_id` is not unique")
+  }
+
+  # Filter `df` for invalid ICD codes
+  df2 <- df |>
+    dplyr::filter(dplyr::if_any(
+      c(cod, tidyselect::starts_with("mult")),
+      ~ !stringr::str_detect(.x, "^[:alpha:]\\d{2,4}$")
+    ))
+
+  # Variables with ICD codes
+  var <- stringr::str_which(colnames(df), "(?i)^cod$|^mult\\d{2}$")
+
+  # Roll across columns with ICD codes and fix
+  for (i in 1:length(var)) {
+    # Split string at space
+    pt1 <- apply(df2[, var[i]], 1, \(x) strsplit(x, "\\s")[[1]][1])
+    pt2 <- apply(df2[, var[i]], 1, \(x) strsplit(x, "\\s")[[1]][2])
+
+    # For all but the last column...
+    if (i != length(var)) {
+      df3 <- data.frame(
+        x = pt2, # Code part 2 from column `var[i]`
+        y = df2[[var[i + 1]]] # Whole value from column `var[i + 1]`
+      )
+
+      nm <- colnames(df2)[var[i + 1]]
+
+      # Unite code parts from columns `var[i]` & `var[i + 1]`
+      df2[, var[i + 1]] <- tidyr::unite(
+        df3,
+        col = nm,
+        tidyselect::everything(),
+        sep = "",
+        remove = TRUE,
+        na.rm = TRUE
+      )
+    }
+
+    # Replace code part 1 from column `var[i]`
+    df2[[var[i]]] <- pt1
+  }
+
+  df |>
+    dplyr::rows_update(df2, by = row_id)
+}
+```
+
+## Fix with a custom function
+
+```{r}
+vital2 <- fix_vital_icd(vital, "rowid")
+
+vital2 |>
+  mutate(across(matches("cod|mult"), ~ if_else(is.na(.x), "", .x))) |>
+  head() |>
+  gt::gt()
+```
+
+## Wrap-up
+
+- Data prep is about getting to know your data, knowing what you should expect from your data, and questioning your assumptions about the data
+- Data prep involves a lot of exploration and testing different ways of doing things
+- Know how your code is handling values you might not be considering: NA, empty strings, negative numbers
+- tidyverse is very useful (I recommend also knowing how to accomplish the same step in base R)
+- Regular expressions are extremely helpful
+
+## Resources
+
+::: {.nonincremental}
+- [stringr](https://stringr.tidyverse.org/) website and cheatsheet
+- [regex](https://rstudio.github.io/cheatsheets/regex.pdf) cheatsheet
+- [Regular-Expressions.info](https://www.regular-expressions.info/)
+:::
+
+

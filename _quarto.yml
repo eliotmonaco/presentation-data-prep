@@ -1,0 +1,6 @@
+project:
+  title: "presentation-data-prep"
+  type: website
+  output-dir: docs
+
+

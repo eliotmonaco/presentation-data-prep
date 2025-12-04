@@ -1,0 +1,98 @@
+/*-- scss:defaults --*/
+
+$bg-color1: #072340;
+$bg-color2: #093d17;
+$text-emph: #5197db;
+
+/*-- scss:rules --*/
+
+.reveal .progress {
+  //color: #c13ec1;
+}
+
+// Section slides
+.slide-background.level1 {
+	background-color: $bg-color1;
+}
+
+// Normal slides
+.reveal-viewport {
+  background-color: $bg-color2;
+}
+
+// Lists
+ul {
+  padding-inline-start: 40px;
+}
+
+section.slide > h2:first-child {
+	margin-bottom: 40px;
+}
+
+ul,
+div.cell,
+div.fragment,
+div.fragment > div.cell,
+div.cell-output,
+details.code-fold {
+	margin-bottom: .5em !important;
+}
+
+p + div.cell,
+p + div.fragment,
+.cell-output-display {
+	margin-top: .5em !important;
+}
+
+strong, em {
+	color: $text-emph;
+}
+
+.txt-green {
+	color: lightgreen;
+}
+
+.txt-blue {
+	color: lightskyblue;
+}
+
+.txt-red {
+	color: lightcoral;
+}
+
+.txt-yellow {
+	color: palegoldenrod;
+}
+
+.txt-bold {
+	font-weight: bold;
+}
+
+/* CODE-FOLD SECTION BUTTON */
+
+details.code-fold > summary {
+	font-size: .5em;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #333;
+	border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #555;
+	border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	/* background: #555; */
+}

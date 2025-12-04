@@ -1,0 +1,240 @@
+[
+  {
+    "objectID": "slides.html#parts-of-an-analysis",
+    "href": "slides.html#parts-of-an-analysis",
+    "title": "Data preparation in R",
+    "section": "Parts of an analysis",
+    "text": "Parts of an analysis\n\nData prep: Get data ready for analysis\nAnalyze data: Ask questions of the data and get answers\nCreate output(s): Format the results for external consumption"
+  },
+  {
+    "objectID": "slides.html#what-is-data-prep",
+    "href": "slides.html#what-is-data-prep",
+    "title": "Data preparation in R",
+    "section": "What is data prep?",
+    "text": "What is data prep?\n\nValidate: Is my data what I expect it to be?\nClean: What corrections need to be made for the data to be useful?\nConfigure: What modifications need to be made for the purposes of my analysis?"
+  },
+  {
+    "objectID": "slides.html#rows-and-columns",
+    "href": "slides.html#rows-and-columns",
+    "title": "Data preparation in R",
+    "section": "Rows and columns",
+    "text": "Rows and columns\n\nEach row is a unique observation\nEach column is a distinct variable"
+  },
+  {
+    "objectID": "slides.html#columns-variables",
+    "href": "slides.html#columns-variables",
+    "title": "Data preparation in R",
+    "section": "Columns (variables)",
+    "text": "Columns (variables)\n\nAll values in a column are of the same type\nCommon types:\n\nnumeric (or double or integer)\ncharacter (or string or text)\ndate (or POSIX)"
+  },
+  {
+    "objectID": "slides.html#columns-variables-1",
+    "href": "slides.html#columns-variables-1",
+    "title": "Data preparation in R",
+    "section": "Columns (variables)",
+    "text": "Columns (variables)\n\n\n\nanimal\nage\nfavorite_food\nbirth_date\n\n\n\n\ndog\n4\nkibble\n2021-04-10\n\n\ncat\n10\nfancy feast\n2015-11-18\n\n\nfish\n0.5\nflakes\n2025-05-22"
+  },
+  {
+    "objectID": "slides.html#how-do-i-know-what-to-expect",
+    "href": "slides.html#how-do-i-know-what-to-expect",
+    "title": "Data preparation in R",
+    "section": "How do I know what to expect?",
+    "text": "How do I know what to expect?\nA data dictionary tells you which values are allowed.\n\n\n\n\n\n\n\n\n\nname\ndescription\ntype\nallowed_values\n\n\n\n\nstate_fips\nState FIPS code\ntext\n2-digit number\n\n\nmanner\nManner of death code\ntext\nA = Accident, S = Suicide, H = Homicide, P = Pending Investigation, N = Natural, C = Could not be determined"
+  },
+  {
+    "objectID": "slides.html#how-do-i-know-what-to-expect-1",
+    "href": "slides.html#how-do-i-know-what-to-expect-1",
+    "title": "Data preparation in R",
+    "section": "How do I know what to expect?",
+    "text": "How do I know what to expect?\nIf there is no data dictionary, use context.\n\nOther documentation from the data source\nColumn names\nColumn values"
+  },
+  {
+    "objectID": "slides.html#functions-for-snapshotting-dataframes",
+    "href": "slides.html#functions-for-snapshotting-dataframes",
+    "title": "Data preparation in R",
+    "section": "Functions for snapshotting dataframes",
+    "text": "Functions for snapshotting dataframes\n\n\nhead()\nstr()\nglimpse()"
+  },
+  {
+    "objectID": "slides.html#head",
+    "href": "slides.html#head",
+    "title": "Data preparation in R",
+    "section": "head()",
+    "text": "head()\n\nlibrary(dplyr)\n\nhead(starwars)\n\n# A tibble: 6 × 14\n  name   height  mass hair_color skin_color eye_color birth_year sex   gender homeworld species films vehicles starships\n  &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;   &lt;lis&gt; &lt;list&gt;   &lt;list&gt;   \n1 Luke …    172    77 blond      fair       blue            19   male  mascu… Tatooine  Human   &lt;chr&gt; &lt;chr&gt;    &lt;chr [2]&gt;\n2 C-3PO     167    75 &lt;NA&gt;       gold       yellow         112   none  mascu… Tatooine  Droid   &lt;chr&gt; &lt;chr&gt;    &lt;chr [0]&gt;\n3 R2-D2      96    32 &lt;NA&gt;       white, bl… red             33   none  mascu… Naboo     Droid   &lt;chr&gt; &lt;chr&gt;    &lt;chr [0]&gt;\n4 Darth…    202   136 none       white      yellow          41.9 male  mascu… Tatooine  Human   &lt;chr&gt; &lt;chr&gt;    &lt;chr [1]&gt;\n5 Leia …    150    49 brown      light      brown           19   fema… femin… Alderaan  Human   &lt;chr&gt; &lt;chr&gt;    &lt;chr [0]&gt;\n6 Owen …    178   120 brown, gr… light      blue            52   male  mascu… Tatooine  Human   &lt;chr&gt; &lt;chr&gt;    &lt;chr [0]&gt;"
+  },
+  {
+    "objectID": "slides.html#str",
+    "href": "slides.html#str",
+    "title": "Data preparation in R",
+    "section": "str()",
+    "text": "str()\n\nlibrary(dplyr)\n\nstr(starwars)\n\ntibble [87 × 14] (S3: tbl_df/tbl/data.frame)\n $ name      : chr [1:87] \"Luke Skywalker\" \"C-3PO\" \"R2-D2\" \"Darth Vader\" ...\n $ height    : int [1:87] 172 167 96 202 150 178 165 97 183 182 ...\n $ mass      : num [1:87] 77 75 32 136 49 120 75 32 84 77 ...\n $ hair_color: chr [1:87] \"blond\" NA NA \"none\" ...\n $ skin_color: chr [1:87] \"fair\" \"gold\" \"white, blue\" \"white\" ...\n $ eye_color : chr [1:87] \"blue\" \"yellow\" \"red\" \"yellow\" ...\n $ birth_year: num [1:87] 19 112 33 41.9 19 52 47 NA 24 57 ...\n $ sex       : chr [1:87] \"male\" \"none\" \"none\" \"male\" ...\n $ gender    : chr [1:87] \"masculine\" \"masculine\" \"masculine\" \"masculine\" ...\n $ homeworld : chr [1:87] \"Tatooine\" \"Tatooine\" \"Naboo\" \"Tatooine\" ...\n $ species   : chr [1:87] \"Human\" \"Droid\" \"Droid\" \"Human\" ...\n $ films     :List of 87\n  ..$ : chr [1:5] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"Revenge of the Sith\" ...\n  ..$ : chr [1:6] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"The Phantom Menace\" ...\n  ..$ : chr [1:7] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"The Phantom Menace\" ...\n  ..$ : chr [1:4] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"Revenge of the Sith\"\n  ..$ : chr [1:5] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"Revenge of the Sith\" ...\n  ..$ : chr [1:3] \"A New Hope\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:3] \"A New Hope\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"A New Hope\"\n  ..$ : chr \"A New Hope\"\n  ..$ : chr [1:6] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"The Phantom Menace\" ...\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"A New Hope\" \"Revenge of the Sith\"\n  ..$ : chr [1:5] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"Revenge of the Sith\" ...\n  ..$ : chr [1:4] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\" \"The Force Awakens\"\n  ..$ : chr \"A New Hope\"\n  ..$ : chr [1:3] \"A New Hope\" \"Return of the Jedi\" \"The Phantom Menace\"\n  ..$ : chr [1:3] \"A New Hope\" \"The Empire Strikes Back\" \"Return of the Jedi\"\n  ..$ : chr \"A New Hope\"\n  ..$ : chr [1:5] \"The Empire Strikes Back\" \"Return of the Jedi\" \"The Phantom Menace\" \"Attack of the Clones\" ...\n  ..$ : chr [1:5] \"The Empire Strikes Back\" \"Return of the Jedi\" \"The Phantom Menace\" \"Attack of the Clones\" ...\n  ..$ : chr [1:3] \"The Empire Strikes Back\" \"Return of the Jedi\" \"Attack of the Clones\"\n  ..$ : chr \"The Empire Strikes Back\"\n  ..$ : chr \"The Empire Strikes Back\"\n  ..$ : chr [1:2] \"The Empire Strikes Back\" \"Return of the Jedi\"\n  ..$ : chr \"The Empire Strikes Back\"\n  ..$ : chr [1:2] \"Return of the Jedi\" \"The Force Awakens\"\n  ..$ : chr \"Return of the Jedi\"\n  ..$ : chr \"Return of the Jedi\"\n  ..$ : chr \"Return of the Jedi\"\n  ..$ : chr \"Return of the Jedi\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Attack of the Clones\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Attack of the Clones\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Attack of the Clones\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"Return of the Jedi\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Revenge of the Sith\"\n  ..$ : chr \"The Phantom Menace\"\n  ..$ : chr [1:3] \"The Phantom Menace\" \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"The Phantom Menace\" \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr \"Attack of the Clones\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"Revenge of the Sith\"\n  ..$ : chr \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"A New Hope\" \"Revenge of the Sith\"\n  ..$ : chr [1:2] \"Attack of the Clones\" \"Revenge of the Sith\"\n  ..$ : chr \"Revenge of the Sith\"\n  ..$ : chr \"The Force Awakens\"\n  ..$ : chr \"The Force Awakens\"\n  ..$ : chr \"The Force Awakens\"\n  ..$ : chr \"The Force Awakens\"\n  ..$ : chr \"The Force Awakens\"\n $ vehicles  :List of 87\n  ..$ : chr [1:2] \"Snowspeeder\" \"Imperial Speeder Bike\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Imperial Speeder Bike\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Tribubble bongo\"\n  ..$ : chr [1:2] \"Zephyr-G swoop bike\" \"XJ-6 airspeeder\"\n  ..$ : chr(0) \n  ..$ : chr \"AT-ST\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Snowspeeder\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Tribubble bongo\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Sith speeder\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Flitknot speeder\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Koro-2 Exodrive airspeeder\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Tsmeu-6 personal wheel bike\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n $ starships :List of 87\n  ..$ : chr [1:2] \"X-wing\" \"Imperial shuttle\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"TIE Advanced x1\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"X-wing\"\n  ..$ : chr [1:5] \"Jedi starfighter\" \"Trade Federation cruiser\" \"Naboo star skiff\" \"Jedi Interceptor\" ...\n  ..$ : chr [1:3] \"Naboo fighter\" \"Trade Federation cruiser\" \"Jedi Interceptor\"\n  ..$ : chr(0) \n  ..$ : chr [1:2] \"Millennium Falcon\" \"Imperial shuttle\"\n  ..$ : chr [1:2] \"Millennium Falcon\" \"Imperial shuttle\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"X-wing\"\n  ..$ : chr \"X-wing\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Slave 1\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Millennium Falcon\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"A-wing\"\n  ..$ : chr(0) \n  ..$ : chr \"Millennium Falcon\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr [1:3] \"Naboo fighter\" \"H-type Nubian yacht\" \"Naboo star skiff\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Naboo Royal Starship\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Scimitar\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Jedi starfighter\"\n  ..$ : chr(0) \n  ..$ : chr \"Naboo fighter\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"Belbullab-22 starfighter\"\n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr(0) \n  ..$ : chr \"X-wing\"\n  ..$ : chr(0) \n  ..$ : chr(0)"
+  },
+  {
+    "objectID": "slides.html#glimpse",
+    "href": "slides.html#glimpse",
+    "title": "Data preparation in R",
+    "section": "glimpse()",
+    "text": "glimpse()\n\nlibrary(dplyr)\n\nglimpse(starwars)\n\nRows: 87\nColumns: 14\n$ name       &lt;chr&gt; \"Luke Skywalker\", \"C-3PO\", \"R2-D2\", \"Darth Vader\", \"Leia Organa\", \"Owen Lars\", \"Beru Whitesun Lars\"…\n$ height     &lt;int&gt; 172, 167, 96, 202, 150, 178, 165, 97, 183, 182, 188, 180, 228, 180, 173, 175, 170, 180, 66, 170, 18…\n$ mass       &lt;dbl&gt; 77.0, 75.0, 32.0, 136.0, 49.0, 120.0, 75.0, 32.0, 84.0, 77.0, 84.0, NA, 112.0, 80.0, 74.0, 1358.0, …\n$ hair_color &lt;chr&gt; \"blond\", NA, NA, \"none\", \"brown\", \"brown, grey\", \"brown\", NA, \"black\", \"auburn, white\", \"blond\", \"a…\n$ skin_color &lt;chr&gt; \"fair\", \"gold\", \"white, blue\", \"white\", \"light\", \"light\", \"light\", \"white, red\", \"light\", \"fair\", \"…\n$ eye_color  &lt;chr&gt; \"blue\", \"yellow\", \"red\", \"yellow\", \"brown\", \"blue\", \"blue\", \"red\", \"brown\", \"blue-gray\", \"blue\", \"b…\n$ birth_year &lt;dbl&gt; 19.0, 112.0, 33.0, 41.9, 19.0, 52.0, 47.0, NA, 24.0, 57.0, 41.9, 64.0, 200.0, 29.0, 44.0, 600.0, 21…\n$ sex        &lt;chr&gt; \"male\", \"none\", \"none\", \"male\", \"female\", \"male\", \"female\", \"none\", \"male\", \"male\", \"male\", \"male\",…\n$ gender     &lt;chr&gt; \"masculine\", \"masculine\", \"masculine\", \"masculine\", \"feminine\", \"masculine\", \"feminine\", \"masculine…\n$ homeworld  &lt;chr&gt; \"Tatooine\", \"Tatooine\", \"Naboo\", \"Tatooine\", \"Alderaan\", \"Tatooine\", \"Tatooine\", \"Tatooine\", \"Tatoo…\n$ species    &lt;chr&gt; \"Human\", \"Droid\", \"Droid\", \"Human\", \"Human\", \"Human\", \"Human\", \"Droid\", \"Human\", \"Human\", \"Human\", …\n$ films      &lt;list&gt; &lt;\"A New Hope\", \"The Empire Strikes Back\", \"Return of the Jedi\", \"Revenge of the Sith\", \"The Force …\n$ vehicles   &lt;list&gt; &lt;\"Snowspeeder\", \"Imperial Speeder Bike\"&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, \"Imperial Speeder Bike\", &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, \"Tr…\n$ starships  &lt;list&gt; &lt;\"X-wing\", \"Imperial shuttle\"&gt;, &lt;&gt;, &lt;&gt;, \"TIE Advanced x1\", &lt;&gt;, &lt;&gt;, &lt;&gt;, &lt;&gt;, \"X-wing\", &lt;\"Jedi starfi…"
+  },
+  {
+    "objectID": "slides.html#global-checks",
+    "href": "slides.html#global-checks",
+    "title": "Data preparation in R",
+    "section": "Global checks",
+    "text": "Global checks\n\nWhat are the column names?\nIs the number of rows unexpected?\nAre there duplicate rows?\nAre there missing values?"
+  },
+  {
+    "objectID": "slides.html#checking-individual-variables",
+    "href": "slides.html#checking-individual-variables",
+    "title": "Data preparation in R",
+    "section": "Checking individual variables",
+    "text": "Checking individual variables\nWhich variables are necessary to validate for the analysis? You may not need to validate them all."
+  },
+  {
+    "objectID": "slides.html#useful-things",
+    "href": "slides.html#useful-things",
+    "title": "Data preparation in R",
+    "section": "Useful things",
+    "text": "Useful things\n\ndplyr::count()\ndplyr::filter()\nRegular expressions"
+  },
+  {
+    "objectID": "slides.html#count",
+    "href": "slides.html#count",
+    "title": "Data preparation in R",
+    "section": "count()",
+    "text": "count()\nCompare column values against what’s expected.\n\nstarwars |&gt;\n  count(hair_color)\n\n# A tibble: 12 × 2\n   hair_color        n\n   &lt;chr&gt;         &lt;int&gt;\n 1 auburn            1\n 2 auburn, grey      1\n 3 auburn, white     1\n 4 black            13\n 5 blond             3\n 6 blonde            1\n 7 brown            18\n 8 brown, grey       1\n 9 grey              1\n10 none             38\n11 white             4\n12 &lt;NA&gt;              5"
+  },
+  {
+    "objectID": "slides.html#filter",
+    "href": "slides.html#filter",
+    "title": "Data preparation in R",
+    "section": "filter()",
+    "text": "filter()\nSeek out unexpected values.\n\ndf &lt;- sf::st_drop_geometry(kcData::sf_tract_2024)\n\n# Check column for a single value\ndf |&gt;\n  filter(STATEFP != \"29\") |&gt;\n  nrow()\n\n[1] 0\n\n# Check column for multiple values\ndf |&gt;\n  filter(!COUNTYFP %in% c(\"037\", \"047\", \"095\", \"165\")) |&gt;\n  nrow()\n\n[1] 0"
+  },
+  {
+    "objectID": "slides.html#filter-regex",
+    "href": "slides.html#filter-regex",
+    "title": "Data preparation in R",
+    "section": "filter() + regex",
+    "text": "filter() + regex\nSeek out unexpected values.\n\n# Check column based on a regular expression pattern\ndf |&gt;\n  filter(!grepl(\"^\\\\d{6}$\", TRACTCE)) |&gt;\n  nrow()\n\n[1] 0"
+  },
+  {
+    "objectID": "slides.html#what-have-we-done-so-far",
+    "href": "slides.html#what-have-we-done-so-far",
+    "title": "Data preparation in R",
+    "section": "What have we done so far?",
+    "text": "What have we done so far?\nSo far, we haven’t changed the data in any way. We are just playing detective and learning about the data."
+  },
+  {
+    "objectID": "slides.html#important-principles",
+    "href": "slides.html#important-principles",
+    "title": "Data preparation in R",
+    "section": "Important principles",
+    "text": "Important principles\n\nDo everything in code\nDo not manually change the source data (e.g., editing in Excel)\nDo not overwrite the source data - keep it in its wild, shaggy state\nSave your modified data as a separate file\nDocument and comment extensively"
+  },
+  {
+    "objectID": "slides.html#example-addresses",
+    "href": "slides.html#example-addresses",
+    "title": "Data preparation in R",
+    "section": "Example: Addresses",
+    "text": "Example: Addresses\nCleaning addresses for geocoding. We need street addresses only.\n\n\n\nstreet\ncity\nstate\nzip\n\n\n\n\n123 Main St.\nKansas City\nMO\n64102\n\n\nBob’s house, 123 Main St.\nKansas City\nMO\n64102\n\n\n\n123 Main St.\nKansas City\nMO\n\n\n\n\naddresses &lt;- tribble(\n  ~street, ~city, ~state, ~zip,\n  \"123 Main St.\", \"Kansas City\", \"MO\", \"64102\",\n  \"Bob's house, 123 Main St.\", \"Kansas City\", \"MO\", \"64102\",\n  \"\", \"123 Main St.\", \"Kansas City\", \"MO\"\n)"
+  },
+  {
+    "objectID": "slides.html#street-variable",
+    "href": "slides.html#street-variable",
+    "title": "Data preparation in R",
+    "section": "street variable",
+    "text": "street variable\n\n# `street` doesn't start with a digit\naddresses |&gt;\n  filter(!grepl(\"^\\\\d\", street))\n\n# A tibble: 2 × 4\n  street                      city         state       zip  \n  &lt;chr&gt;                       &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"Bob's house, 123 Main St.\" Kansas City  MO          64102\n2 \"\"                          123 Main St. Kansas City MO   \n\n# `street` starts with a non-digit\naddresses |&gt;\n  filter(grepl(\"^\\\\D\", street))\n\n# A tibble: 1 × 4\n  street                    city        state zip  \n  &lt;chr&gt;                     &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;\n1 Bob's house, 123 Main St. Kansas City MO    64102"
+  },
+  {
+    "objectID": "slides.html#city-variable",
+    "href": "slides.html#city-variable",
+    "title": "Data preparation in R",
+    "section": "city variable",
+    "text": "city variable\n\n# `city` doesn't contain \"kansas city\" (case insensitive)\naddresses |&gt;\n  filter(!grepl(\"(?i)kansas city\", city))\n\n# A tibble: 1 × 4\n  street city         state       zip  \n  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"\"     123 Main St. Kansas City MO   \n\n# `city` contains a digit\naddresses |&gt;\n  filter(grepl(\"\\\\d\", city))\n\n# A tibble: 1 × 4\n  street city         state       zip  \n  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"\"     123 Main St. Kansas City MO   \n\n# `city` is not in a list of allowed cities\ncities &lt;- c(\"Kansas City\", \"St. Louis\", \"Chicago\")\n\naddresses |&gt;\n  filter(!city %in% cities)\n\n# A tibble: 1 × 4\n  street city         state       zip  \n  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"\"     123 Main St. Kansas City MO"
+  },
+  {
+    "objectID": "slides.html#state-variable",
+    "href": "slides.html#state-variable",
+    "title": "Data preparation in R",
+    "section": "state variable",
+    "text": "state variable\nCan use similar methods as with city.\n\n\nstate != \"MO\"\n!state %in% states\n\n\n\n# `state` is not two uppercase letters\naddresses |&gt;\n  filter(!grepl(\"^[[:upper:]]{2}$\", state))\n\n# A tibble: 1 × 4\n  street city         state       zip  \n  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"\"     123 Main St. Kansas City MO"
+  },
+  {
+    "objectID": "slides.html#regex-detour",
+    "href": "slides.html#regex-detour",
+    "title": "Data preparation in R",
+    "section": "Regex detour",
+    "text": "Regex detour\n\nstates &lt;- c(\"MO\", \"KS\", \"WI\", \"CA\", \"CAT\", \"DOG\", \"lEttERs\")\n\n# Without start/end tokens\nresult &lt;- grepl(\"[[:upper:]]{2}\", states)\n\nsetNames(result, states)\n\n     MO      KS      WI      CA     CAT     DOG lEttERs \n   TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE \n\n# With start/end tokens\nresult &lt;- grepl(\"^[[:upper:]]{2}$\", states)\n\nsetNames(result, states)\n\n     MO      KS      WI      CA     CAT     DOG lEttERs \n   TRUE    TRUE    TRUE    TRUE   FALSE   FALSE   FALSE"
+  },
+  {
+    "objectID": "slides.html#zip-variable",
+    "href": "slides.html#zip-variable",
+    "title": "Data preparation in R",
+    "section": "zip variable",
+    "text": "zip variable\n\n# `zip` is not 5 digits\naddresses |&gt;\n  filter(!grepl(\"^\\\\d{5}$\", zip))\n\n# A tibble: 1 × 4\n  street city         state       zip  \n  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"\"     123 Main St. Kansas City MO   \n\n# `zip` is not 5 digits starting with \"64\"\naddresses |&gt;\n  filter(!grepl(\"^64\\\\d{3}$\", zip))\n\n# A tibble: 1 × 4\n  street city         state       zip  \n  &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;\n1 \"\"     123 Main St. Kansas City MO"
+  },
+  {
+    "objectID": "slides.html#data-import-detour",
+    "href": "slides.html#data-import-detour",
+    "title": "Data preparation in R",
+    "section": "Data import detour",
+    "text": "Data import detour\nWhen importing data, be careful that you don’t change it unexpectedly!\n\nIf a variable can have leading zeros, import as character\nDates, times, and date-time values can be read in many different ways\nProbably other examples"
+  },
+  {
+    "objectID": "slides.html#data-import-functions",
+    "href": "slides.html#data-import-functions",
+    "title": "Data preparation in R",
+    "section": "Data import functions",
+    "text": "Data import functions\nKnow how data import functions read in data and determine types.\nFor example, readr::read_csv()."
+  },
+  {
+    "objectID": "slides.html#example-icd-codes",
+    "href": "slides.html#example-icd-codes",
+    "title": "Data preparation in R",
+    "section": "Example: ICD codes",
+    "text": "Example: ICD codes\nICD-10 codes have a specific format.\nExample: “W56” (Contact with marine animal)\n\nNecessary part: uppercase letter + two digits\nOptional part: period + additional digits\n\n\nHow to check?\n\nUse a list of allowed values\nUse regex, e.g., \"^[[:upper:]]\\\\d{2}(\\\\.\\\\d{1,5})?$\"\n\n\n\n\np &lt;- \"^[[:upper:]]\\\\d{2}(\\\\.\\\\d{1,5})?$\"\n\nicd &lt;- c(\"C41\", \"C41.9\", \"C41.999\", \"C41.\", \"C4.5\", \"C41.5x\")\n\nresult &lt;- grepl(p, icd)\n\nsetNames(result, icd)\n\n    C41   C41.9 C41.999    C41.    C4.5  C41.5x \n   TRUE    TRUE    TRUE   FALSE   FALSE   FALSE"
+  },
+  {
+    "objectID": "slides.html#example-icd-codes-1",
+    "href": "slides.html#example-icd-codes-1",
+    "title": "Data preparation in R",
+    "section": "Example: ICD codes",
+    "text": "Example: ICD codes\n\nvital &lt;- readRDS(\"icd_example.rds\")\n\nvital |&gt;\n  mutate(across(matches(\"cod|mult\"), ~ if_else(is.na(.x), \"\", .x))) |&gt;\n  head() |&gt;\n  gt::gt()\n\n\n\n\n\n\n\nrowid\ncod\nmult01\nmult02\nmult03\nmult04\nmult05\nmult06\nmult07\nmult08\nmult09\nmult10\nmult11\nmult12\nmult13\nmult14\nmult15\nmult16\nmult17\nmult18\nmult19\nmult20\n\n\n\n\n1\nC259\nC259\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2\nF03\nF03\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n3\nE889\nE889\nI272\nI509\nJ90 J\n960 R\n090\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n4\nC509\nC509\nC795\nI509\nJ960\nJ961\nN183\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n5\nX95\nX95 T\n019 T\n141\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n6\nC64\nC64 B\n348 C\n782 D\n649 E\n875 J\n129 R\n090"
+  },
+  {
+    "objectID": "slides.html#notable-features",
+    "href": "slides.html#notable-features",
+    "title": "Data preparation in R",
+    "section": "Notable features",
+    "text": "Notable features\n\nNo periods (this is okay)\nSome values are normal, but…\nSome have a space + an extra letter\nSome have just numbers\n\n\nWhat is going on?\n\n\nICD codes are split across columns."
+  },
+  {
+    "objectID": "slides.html#fix-with-a-custom-function",
+    "href": "slides.html#fix-with-a-custom-function",
+    "title": "Data preparation in R",
+    "section": "Fix with a custom function",
+    "text": "Fix with a custom function\n\n# Fix problems in VR ICD code variables\nfix_vital_icd &lt;- function(df, row_id) {\n  # Check uniqueness of row ID variable\n  if (any(duplicated(df[[row_id]]))) {\n    stop(\"`row_id` is not unique\")\n  }\n\n  # Filter `df` for invalid ICD codes\n  df2 &lt;- df |&gt;\n    dplyr::filter(dplyr::if_any(\n      c(cod, tidyselect::starts_with(\"mult\")),\n      ~ !stringr::str_detect(.x, \"^[:alpha:]\\\\d{2,4}$\")\n    ))\n\n  # Variables with ICD codes\n  var &lt;- stringr::str_which(colnames(df), \"(?i)^cod$|^mult\\\\d{2}$\")\n\n  # Roll across columns with ICD codes and fix\n  for (i in 1:length(var)) {\n    # Split string at space\n    pt1 &lt;- apply(df2[, var[i]], 1, \\(x) strsplit(x, \"\\\\s\")[[1]][1])\n    pt2 &lt;- apply(df2[, var[i]], 1, \\(x) strsplit(x, \"\\\\s\")[[1]][2])\n\n    # For all but the last column...\n    if (i != length(var)) {\n      df3 &lt;- data.frame(\n        x = pt2, # Code part 2 from column `var[i]`\n        y = df2[[var[i + 1]]] # Whole value from column `var[i + 1]`\n      )\n\n      nm &lt;- colnames(df2)[var[i + 1]]\n\n      # Unite code parts from columns `var[i]` & `var[i + 1]`\n      df2[, var[i + 1]] &lt;- tidyr::unite(\n        df3,\n        col = nm,\n        tidyselect::everything(),\n        sep = \"\",\n        remove = TRUE,\n        na.rm = TRUE\n      )\n    }\n\n    # Replace code part 1 from column `var[i]`\n    df2[[var[i]]] &lt;- pt1\n  }\n\n  df |&gt;\n    dplyr::rows_update(df2, by = row_id)\n}"
+  },
+  {
+    "objectID": "slides.html#fix-with-a-custom-function-1",
+    "href": "slides.html#fix-with-a-custom-function-1",
+    "title": "Data preparation in R",
+    "section": "Fix with a custom function",
+    "text": "Fix with a custom function\n\nvital2 &lt;- fix_vital_icd(vital, \"rowid\")\n\nvital2 |&gt;\n  mutate(across(matches(\"cod|mult\"), ~ if_else(is.na(.x), \"\", .x))) |&gt;\n  head() |&gt;\n  gt::gt()\n\n\n\n\n\n\n\nrowid\ncod\nmult01\nmult02\nmult03\nmult04\nmult05\nmult06\nmult07\nmult08\nmult09\nmult10\nmult11\nmult12\nmult13\nmult14\nmult15\nmult16\nmult17\nmult18\nmult19\nmult20\n\n\n\n\n1\nC259\nC259\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2\nF03\nF03\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n3\nE889\nE889\nI272\nI509\nJ90\nJ960\nR090\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n4\nC509\nC509\nC795\nI509\nJ960\nJ961\nN183\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n5\nX95\nX95\nT019\nT141\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n6\nC64\nC64\nB348\nC782\nD649\nE875\nJ129\nR090"
+  },
+  {
+    "objectID": "slides.html#wrap-up",
+    "href": "slides.html#wrap-up",
+    "title": "Data preparation in R",
+    "section": "Wrap-up",
+    "text": "Wrap-up\n\nData prep is about getting to know your data, knowing what you should expect from your data, and questioning your assumptions about the data\nData prep involves a lot of exploration and testing different ways of doing things\nKnow how your code is handling values you might not be considering: NA, empty strings, negative numbers\ntidyverse is very useful (I recommend also knowing how to accomplish the same step in base R)\nRegular expressions are extremely helpful"
+  },
+  {
+    "objectID": "slides.html#resources",
+    "href": "slides.html#resources",
+    "title": "Data preparation in R",
+    "section": "Resources",
+    "text": "Resources\n\n\nstringr website and cheatsheet\nregex cheatsheet\nRegular-Expressions.info"
+  }
+]
